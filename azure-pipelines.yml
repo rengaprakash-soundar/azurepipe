@@ -1,0 +1,35 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: TerraformInstaller@0
+  displayName: 'install'
+  inputs:
+    terraformVersion: '0.14.5'
+- task: TerraformTaskV1@0
+  displayName: 'init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'Azure subscription 1(485a5260-a737-439f-82c9-d22080190b73)'
+    backendAzureRmResourceGroupName: 'backend'
+    backendAzureRmStorageAccountName: 'statefiless'
+    backendAzureRmContainerName: 'state'
+    backendAzureRmKey: 'prod.terraform.tfstate'
+- task: TerraformTaskV1@0
+  displayName: 'validate'
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+- task: TerraformTaskV1@0
+  displayName: 'plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'Azure subscription 1(485a5260-a737-439f-82c9-d22080190b73)'
+- task: TerraformTaskV1@0
+  displayName: 'apply'
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: 'Azure subscription 1(485a5260-a737-439f-82c9-d22080190b73)'
